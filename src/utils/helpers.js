@@ -1,44 +1,45 @@
-const oracledb = require('oracledb');
+const axios = require('axios').default;
 
-async function database(query, values) {
-  let connect;
-
-  const { DB_USERNAME, DB_PASSWORD, DB_CONNECTION_STRING } = process.env;
-
+async function executeApiCall(requestUrl) {
   try {
-    connect = await oracledb.getConnection({
-      user: DB_USERNAME,
-      password: DB_PASSWORD,
-      connectString: DB_CONNECTION_STRING,
-    });
+    const { data, error } = await axios.get(requestUrl);
 
-    console.log('Successfully connected to Oracle!');
-
-    let resp = await connect.execute(query, values, {
-      outFormat: oracledb.OUT_FORMAT_OBJECT,
-    });
+    if (error) {
+      return {
+        success: false,
+        data: 'error',
+        error: error.message,
+      };
+    }
 
     return {
-      result: true,
-      data:
-        resp && resp.rows && resp.rows[0] ? resp.rows[0] : 'Record not found.',
-      error: null,
+      success: true,
+      data,
+      error: false,
     };
   } catch (error) {
     return {
-      result: false,
-      data: null,
+      success: false,
+      data: 'error',
       error: error.message,
     };
-  } finally {
-    if (connect) {
-      try {
-        await connect.close();
-      } catch (err) {
-        console.log(err.message);
-      }
-    }
   }
 }
 
-module.exports = { database };
+function handleResponse({ success, data, error }) {
+  if (success) {
+    return {
+      success: true,
+      data,
+      error: null,
+    };
+  }
+
+  return {
+    success: false,
+    data: null,
+    error,
+  };
+}
+
+module.exports = { executeApiCall, handleResponse };

@@ -1,5 +1,13 @@
+const { searchArtistController } = require('./search-artist-controller');
 const {
-  pullDeezerArtistDataController,
-} = require('./deezer-artist-data-controller');
+  fetchArtistAlbumController,
+} = require('./fetch-artist-album-controller');
+const {
+  fetchArtistTopTracksController,
+} = require('./fetch-artist-top-tracks-controller');
 
-module.exports = { pullDeezerArtistDataController };
+module.exports = {
+  searchArtistController,
+  fetchArtistAlbumController,
+  fetchArtistTopTracksController,
+};

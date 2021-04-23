@@ -1,12 +1,12 @@
 const express = require('express');
-
+const router = express.Router();
 const controllers = require('../controllers');
 
-const router = express.Router();
-
+router.get('/search-artist', controllers.searchArtistController);
+router.get('/fetch-artist-album', controllers.fetchArtistAlbumController);
 router.get(
-  '/pull-deezer-artist-data',
-  controllers.pullDeezerArtistDataController
+  '/fetch-artist-top_tracks',
+  controllers.fetchArtistTopTracksController
 );
 
 module.exports = { router };
